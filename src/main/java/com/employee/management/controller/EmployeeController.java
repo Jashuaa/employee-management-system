@@ -25,7 +25,10 @@ import com.employee.management.service.EmployeeService;
 
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {
+	    "http://localhost:5173",
+	    "http://localhost:3000"
+	})
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {

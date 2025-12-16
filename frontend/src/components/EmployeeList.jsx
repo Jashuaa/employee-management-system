@@ -15,9 +15,26 @@ function EmployeeList({ reload }) {
     }
   };
 
+  const deleteEmployee = async (id) => {
+    
+
+  try {
+    await fetch(
+      `https://employee-management-system-frvx.onrender.com/api/employees/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    // after delete → reload list
+    fetchEmployees();
+  } catch (error) {
+    console.error("Error deleting employee", error);
+  }
+};
   useEffect(() => {
     fetchEmployees();
-  }, [reload]); // 🔥 THIS IS THE MAGIC
+  }, [reload]); //THIS IS THE MAGIC
 
   return (
     <div>
@@ -32,6 +49,7 @@ function EmployeeList({ reload }) {
             <th>Department</th>
             <th>Email</th>
             <th>Salary</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -42,6 +60,7 @@ function EmployeeList({ reload }) {
               <td>{emp.department}</td>
               <td>{emp.email}</td>
               <td>{emp.salary}</td>
+              <td><button onClick={() => deleteEmployee(emp.id)}>Delete</button></td>
             </tr>
           ))}
         </tbody>

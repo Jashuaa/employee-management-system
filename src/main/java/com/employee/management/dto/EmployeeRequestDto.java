@@ -1,9 +1,10 @@
 package com.employee.management.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import java.math.BigDecimal;
 
 public class EmployeeRequestDto {
 
@@ -18,21 +19,18 @@ public class EmployeeRequestDto {
     private String department;
 
     @NotNull(message = "Salary is required")
-    private Double salary;
-
-
+    @Min(value = 0, message = "Salary must be >= 0")
+    private BigDecimal salary;
 
     public EmployeeRequestDto() {
     }
 
-    public EmployeeRequestDto(String name, String email, String department, Double salary) {
+    public EmployeeRequestDto(String name, String email, String department, BigDecimal salary) {
         this.name = name;
         this.email = email;
         this.department = department;
         this.salary = salary;
     }
-
-    // getters & setters
 
     public String getName() {
         return name;
@@ -58,13 +56,11 @@ public class EmployeeRequestDto {
         this.department = department;
     }
 
-    public Double getSalary() {
+    public BigDecimal getSalary() {
         return salary;
     }
 
-    public void setSalary(Double salary) {
+    public void setSalary(BigDecimal salary) {
         this.salary = salary;
     }
-
- 
 }

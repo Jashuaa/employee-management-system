@@ -31,3 +31,33 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### SECURITY: Environment and Secrets ###
+.env
+*.env
+!.env.example
+application-local.properties
+application-prod.properties
+secrets/
+*.pem
+*.key
+*.crt
+
+### Logs ###
+logs/
+*.log
+
+### Frontend ###
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+
+### Build artifacts ###
+*.jar
+*.war
+
+### OS Files ###
+.DS_Store
+Thumbs.db

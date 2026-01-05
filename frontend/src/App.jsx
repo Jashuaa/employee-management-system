@@ -1,22 +1,71 @@
 import { useState } from "react";
-import EmployeeForm from "./components/EmployeeForm";
 import EmployeeList from "./components/EmployeeList";
+import EmployeeFormModal from "./components/EmployeeFormModal";
+import DeleteConfirmModal from "./components/DeleteConfirmModal";
+import "./App.css";
 
 function App() {
   const [reload, setReload] = useState(false);
 
-  const triggerReload = () => {
-    setReload((prev) => !prev);
+  const [showForm, setShowForm] = useState(false);
+  const [editingEmployee, setEditingEmployee] = useState(null);
+
+  const [showDelete, setShowDelete] = useState(false);
+  const [employeeToDelete, setEmployeeToDelete] = useState(null);
+
+  const openAddForm = () => {
+    setEditingEmployee(null);
+    setShowForm(true);
+  };
+
+  const openEditForm = (emp) => {
+    setEditingEmployee(emp);
+    setShowForm(true);
+  };
+
+  const openDeleteConfirm = (emp) => {
+    setEmployeeToDelete(emp);
+    setShowDelete(true);
   };
 
   return (
-    <div>
-      <h1>Employee Management System</h1>
+    <>
+      {/* MAIN PAGE CONTENT */}
+      <div className={`app ${showForm || showDelete ? "blurred" : ""}`}>
+        <h1 className="title">Employee Management System</h1>
 
-      <EmployeeForm onEmployeeAdded={triggerReload} />
+        <EmployeeList
+          reload={reload}
+          onAdd={openAddForm}
+          onEdit={openEditForm}
+          onDelete={openDeleteConfirm}
+        />
+      </div>
 
-      <EmployeeList reload={reload} />
-    </div>
+      {/* ADD / EDIT MODAL */}
+      {showForm && (
+        <EmployeeFormModal
+          editingEmployee={editingEmployee}
+          onClose={() => setShowForm(false)}
+          onSaved={() => {
+            setShowForm(false);
+            setReload(!reload);
+          }}
+        />
+      )}
+
+      {/* DELETE CONFIRM MODAL */}
+      {showDelete && (
+        <DeleteConfirmModal
+          employee={employeeToDelete}
+          onCancel={() => setShowDelete(false)}
+          onConfirm={() => {
+            setShowDelete(false);
+            setReload(!reload);
+          }}
+        />
+      )}
+    </>
   );
 }
 

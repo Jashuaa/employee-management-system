@@ -1,29 +1,25 @@
 package com.employee.management.dto;
 
+import java.math.BigDecimal;
+
 public class EmployeeResponseDto {
 
     private Long id;
     private String name;
     private String department;
     private String email;
-    private Double salary;
-
- 
-
+    private BigDecimal salary;
 
     public EmployeeResponseDto() {
     }
 
-    public EmployeeResponseDto(Long id, String name, String department,
-                               String email, Double salary) {
+    public EmployeeResponseDto(Long id, String name, String department, String email, BigDecimal salary) {
         this.id = id;
         this.name = name;
         this.department = department;
         this.email = email;
         this.salary = salary;
-        }
-
-    // getters & setters
+    }
 
     public Long getId() {
         return id;
@@ -57,15 +53,11 @@ public class EmployeeResponseDto {
         this.email = email;
     }
 
-    public Double getSalary() {
+    public BigDecimal getSalary() {
         return salary;
     }
 
-    public void setSalary(Double salary) {
+    public void setSalary(BigDecimal salary) {
         this.salary = salary;
     }
-
-
-
-
 }

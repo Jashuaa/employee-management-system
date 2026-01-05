@@ -1,17 +1,17 @@
 package com.employee.management.service;
 
 import com.employee.management.dto.EmployeeRequestDto;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import com.employee.management.dto.EmployeeResponseDto;
 import com.employee.management.entity.Employee;
 import com.employee.management.exception.ResourceNotFoundException;
 import com.employee.management.repository.EmployeeRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -24,7 +24,6 @@ public class EmployeeService {
 
     // CREATE
     public EmployeeResponseDto createEmployee(EmployeeRequestDto requestDto) {
-
         Employee employee = mapToEntity(requestDto);
         Employee savedEmployee = repo.save(employee);
         return mapToResponseDto(savedEmployee);
@@ -63,29 +62,12 @@ public class EmployeeService {
 
         return responseList;
     }
-    
- // PAGINATION + SORTING SUPPORT
+
+    // PAGINATION + SORTING SUPPORT
     public Page<EmployeeResponseDto> getAllEmployees(Pageable pageable) {
-
-        // Fetch paginated employees from DB using Page + Pageable
         Page<Employee> employeePage = repo.findAll(pageable);
-
-        // Convert Page<Employee> -> Page<EmployeeResponseDto>
-        Page<EmployeeResponseDto> dtoPage = employeePage.map(emp ->
-        new EmployeeResponseDto(
-                emp.getId(),
-                emp.getName(),
-                emp.getDepartment(),
-                emp.getEmail(),
-                emp.getSalary()
-        )
-);
-
-
-
-        return dtoPage;
+        return employeePage.map(this::mapToResponseDto);
     }
-
 
     // GET BY ID
     public EmployeeResponseDto getEmployeeById(Long id) {
@@ -103,7 +85,6 @@ public class EmployeeService {
 
     // UPDATE
     public EmployeeResponseDto updateEmployee(Long id, EmployeeRequestDto updatedDto) {
-
         Employee existingEmployee = repo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id " + id));
 
@@ -113,18 +94,14 @@ public class EmployeeService {
         existingEmployee.setSalary(updatedDto.getSalary());
 
         Employee savedEmployee = repo.save(existingEmployee);
-
         return mapToResponseDto(savedEmployee);
     }
 
     // DELETE
     public void deleteEmployee(Long id) {
-       boolean exists  = repo.existsById(id);
-       
-       if(!exists) {
-    	   throw new ResourceNotFoundException("Employee Not Found with Id:" + id);
-       }
-       
-       repo.deleteById(id);
+        if (!repo.existsById(id)) {
+            throw new ResourceNotFoundException("Employee Not Found with Id:" + id);
+        }
+        repo.deleteById(id);
     }
 }

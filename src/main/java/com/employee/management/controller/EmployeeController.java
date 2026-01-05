@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,10 +24,7 @@ import com.employee.management.service.EmployeeService;
 
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = {
-	    "http://localhost:5173",
-	    "http://localhost:3000"
-	})
+// SECURITY: CORS is now handled centrally by CorsConfig.java
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
@@ -42,26 +38,26 @@ public class EmployeeController {
     // CREATE
     @PostMapping
     public ResponseEntity<EmployeeResponseDto> saveEmployee(@Valid @RequestBody EmployeeRequestDto requestDto) {
-        EmployeeResponseDto savedEmployee  =  service.createEmployee(requestDto);
+        EmployeeResponseDto savedEmployee = service.createEmployee(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployee);
     }
 
     // GET ALL
     @GetMapping
     public ResponseEntity<List<EmployeeResponseDto>> getAllEmployees() {
-    	List<EmployeeResponseDto> employees  = service.getAllEmployees();
-    	return ResponseEntity.ok(employees);
+        List<EmployeeResponseDto> employees = service.getAllEmployees();
+        return ResponseEntity.ok(employees);
     }
- // GET ALL WITH PAGINATION & SORTING
+
+    // GET ALL WITH PAGINATION & SORTING
     @GetMapping("/page")
     public ResponseEntity<Page<EmployeeResponseDto>> getAllEmployeesWithPagination(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort
-    ) {
+            @RequestParam(defaultValue = "id,asc") String[] sort) {
 
         // Convert sort parameters into Sort object
-        String sortField = sort[0];  // field name like "name"
+        String sortField = sort[0]; // field name like "name"
         String sortDirection = sort[1]; // asc / desc
 
         Sort.Direction direction = sortDirection.equalsIgnoreCase("desc")
@@ -75,33 +71,32 @@ public class EmployeeController {
         return ResponseEntity.ok(employeePage);
     }
 
-
     // GET BY ID
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeResponseDto> getEmployeeById(@PathVariable Long id) {
-    	EmployeeResponseDto employee =  service.getEmployeeById(id);
-    	return ResponseEntity.ok(employee);
+        EmployeeResponseDto employee = service.getEmployeeById(id);
+        return ResponseEntity.ok(employee);
     }
 
     // GET BY EMAIL
     @GetMapping("/by-email")
     public ResponseEntity<EmployeeResponseDto> getEmployeeByEmail(@RequestParam String email) {
-    	EmployeeResponseDto employee =  service.getEmployeeByEmail(email);
-    	return ResponseEntity.ok(employee);
+        EmployeeResponseDto employee = service.getEmployeeByEmail(email);
+        return ResponseEntity.ok(employee);
     }
 
     // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeResponseDto> updateEmployee(@PathVariable Long id,
-                                              @Valid @RequestBody EmployeeRequestDto requestDto) {
-    	EmployeeResponseDto updatedEmployee =  service.updateEmployee(id, requestDto);
-    	return ResponseEntity.ok(updatedEmployee);
+            @Valid @RequestBody EmployeeRequestDto requestDto) {
+        EmployeeResponseDto updatedEmployee = service.updateEmployee(id, requestDto);
+        return ResponseEntity.ok(updatedEmployee);
     }
 
     // DELETE
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable Long id) {
-    		service.deleteEmployee(id);
-        return ResponseEntity.ok("Employee deleted Sucessfully");
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        service.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
     }
 }
